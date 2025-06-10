@@ -1,0 +1,32 @@
+body {
+  background-color: #000;
+  color: rgb(66, 132, 255);
+  font-family: 'Courier New', Courier, monospace;
+  padding: 20px;
+}
+
+a, button {
+  background-color: #111;
+  color: rgb(66, 132, 255);
+  border: 1px solid rgb(66, 132, 255);
+  padding: 5px 10px;
+  margin: 5px;
+  text-decoration: none;
+}
+
+textarea {
+  width: 100%;
+  background-color: #111;
+  color: rgb(66, 132, 255);
+  border: 1px solid rgb(66, 132, 255);
+}
+
+.message {
+  border-bottom: 1px dashed rgb(66, 132, 255);
+  padding: 10px 0;
+}
+
+.timestamp {
+  color: #888;
+  font-size: 0.9em;
+}

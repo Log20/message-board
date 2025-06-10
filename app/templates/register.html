@@ -2,19 +2,19 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>登入</title>
+  <title>註冊</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>登入</h1>
+  <h1>註冊</h1>
   <form method="POST">
     <label>使用者名稱：</label><br>
     <input type="text" name="username" required><br><br>
     <label>密碼：</label><br>
     <input type="password" name="password" required><br><br>
-    <button type="submit">登入</button>
+    <button type="submit">註冊</button>
   </form>
   {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
-  <a href="/register"><button>還沒有帳號？註冊</button></a>
+  <a href="/login"><button>已有帳號？登入</button></a>
 </body>
 </html>
