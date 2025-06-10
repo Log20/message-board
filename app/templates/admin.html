@@ -1,0 +1,29 @@
+<h1>管理員模式</h1>
+<p><a href="/">返回前台</a> | <a href="/logout">登出</a></p>
+
+<ul id="messages"></ul>
+
+<script>
+async function loadMessages() {
+  const res = await fetch('/messages');
+  const data = await res.json();
+  const list = document.getElementById('messages');
+  list.innerHTML = '';
+  data.forEach(([id, name, msg]) => {
+    const li = document.createElement('li');
+    li.innerHTML = `${name}: ${msg} <button onclick="deleteMsg(${id})">刪除</button>`;
+    list.appendChild(li);
+  });
+}
+
+async function deleteMsg(id) {
+  await fetch('/messages', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  loadMessages();
+}
+
+loadMessages();
+</script>

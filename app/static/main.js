@@ -3,7 +3,7 @@ async function loadMessages() {
   const data = await res.json();
   const list = document.getElementById('messages');
   list.innerHTML = '';
-  data.forEach(([name, msg]) => {
+  data.forEach(([id, name, msg]) => {
     const li = document.createElement('li');
     li.textContent = `${name}: ${msg}`;
     list.appendChild(li);
@@ -27,4 +27,3 @@ document.getElementById('msgForm').addEventListener('submit', async (e) => {
 });
 
 loadMessages();
-
