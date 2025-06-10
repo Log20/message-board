@@ -1,5 +1,5 @@
-<h1>ºŞ²z­û¼Ò¦¡</h1>
-<p><a href="/">ªğ¦^«e¥x</a> | <a href="/logout">µn¥X</a></p>
+<h1>ç®¡ç†å“¡æ¨¡å¼</h1>
+<p><a href="/">è¿”å›å‰å°</a> | <a href="/logout">ç™»å‡º</a></p>
 
 <ul id="messages"></ul>
 
@@ -11,7 +11,7 @@ async function loadMessages() {
   list.innerHTML = '';
   data.forEach(([id, name, msg]) => {
     const li = document.createElement('li');
-    li.innerHTML = `${name}: ${msg} <button onclick="deleteMsg(${id})">§R°£</button>`;
+    li.innerHTML = `${name}: ${msg} <button onclick="deleteMsg(${id})">åˆªé™¤</button>`;
     list.appendChild(li);
   });
 }

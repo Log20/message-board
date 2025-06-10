@@ -59,7 +59,7 @@ def login():
             request.form['password'] == ADMIN_PASSWORD):
             session['is_admin'] = True
             return redirect('/admin')
-        return render_template('login.html', error="µn¤J¥¢±Ñ")
+        return render_template('login.html', error="ç™»å…¥å¤±æ•—")
     return render_template('login.html')
 
 @app.route('/logout')
