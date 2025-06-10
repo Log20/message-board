@@ -13,9 +13,10 @@ def init_db():
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute('''
             CREATE TABLE IF NOT EXISTS messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                message TEXT NOT NULL
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            message TEXT NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
         ''')
 
@@ -43,8 +44,9 @@ def messages():
         return jsonify({'status': 'deleted'})
 
     else:
-        c.execute('SELECT id, name, message FROM messages ORDER BY id DESC')
-        return jsonify(c.fetchall())
+        c.execute('SELECT id, name, message, created_at FROM messages ORDER BY id DESC')
+        messages = c.fetchall()
+        return jsonify(messages)
 
 @app.route('/admin')
 def admin_panel():

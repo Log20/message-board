@@ -3,10 +3,12 @@ async function loadMessages() {
   const data = await res.json();
   const list = document.getElementById('messages');
   list.innerHTML = '';
-  data.forEach(([id, name, msg]) => {
-    const li = document.createElement('li');
-    li.textContent = `${name}: ${msg}`;
-    list.appendChild(li);
+  data.forEach(([id, name, msg, created_at]) => {
+  const li = document.createElement('li');
+  // 將時間格式化，簡單示範：
+  const timeStr = new Date(created_at).toLocaleString();
+  li.textContent = `${name} (${timeStr}): ${msg}`;
+  list.appendChild(li);
   });
 }
 
