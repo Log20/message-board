@@ -1,6 +1,0 @@
-flask
-psycopg2-binary
-werkzeug
-authlib
-requests
-python-dotenv
