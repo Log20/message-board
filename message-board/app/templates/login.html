@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>登入</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+    <h1>登入</h1>
+    <form method="POST">
+        <label>EMAIL：</label><br />
+        <input type="text" name="email" required /><br /><br />
+        <label>密碼：</label><br />
+        <input type="password" name="password" required /><br /><br />
+        <button type="submit">登入</button>
+        <a href="{{ url_for('reset_password') }}"> 忘記密碼？</a>
+    </form>
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %}
+    <br />
+    <a href="/register">還沒有帳號？註冊</a> <br /><br />
+    <a href="/login/google">使用 Google 登入</a>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("success") === "registered") {
+            alert("註冊成功，請登入！");
+        }
+        if (params.get("success") === "registered_google") {
+            alert("Google註冊成功！");
+        }
+        if (params.get("success") === "login") {
+            alert("登入成功！");
+        }
+        if (params.get("success") === "password_changed") {
+            alert("密碼已成功更新，請重新登入！");
+        }
+        if (params.has("success")) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+</body>
+
+</html>
