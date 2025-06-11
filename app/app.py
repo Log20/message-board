@@ -1,4 +1,4 @@
-import os, psycopg2, secrets
+import os, psycopg2, secrets, init_db
 from flask import (
     Flask,
     render_template,
