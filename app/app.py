@@ -24,17 +24,12 @@ google = oauth.register(
         "scope": "openid email profile",
     },
 )
-
-
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
     return conn
-
-
-# ------------ 路由部分 ------------
 
 
 @app.route("/")
@@ -53,13 +48,11 @@ def register():
         try:
             conn = get_db_connection()
             cur = conn.cursor()
-            # 先確認 email 是否重複
             cur.execute("SELECT 1 FROM users WHERE email = %s", (email,))
             if cur.fetchone():
                 cur.close()
                 conn.close()
                 return render_template("register.html", error="此 Email 已被使用")
-            # 不檢查 username 是否重複，直接插入
             cur.execute(
                 "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
                 (username, email, password),
@@ -69,7 +62,6 @@ def register():
             conn.close()
             return redirect("/login?success=registered")
         except Exception as e:
-            # 其他例外還是可以捕捉
             if conn:
                 conn.rollback()
             return render_template("register.html", error="註冊失敗，請稍後再試")
@@ -114,30 +106,21 @@ def authorize_google():
     nonce = session.pop("nonce", None)
     user_info = google.parse_id_token(token, nonce=nonce)
     email = user_info.get("email")
-
     conn = get_db_connection()
     cur = conn.cursor()
-
-    # 檢查是否已有使用者綁定此google_email
     cur.execute("SELECT id, username FROM users WHERE email = %s", (email,))
     user = cur.fetchone()
-
     if not user:
-        # 沒有綁定過，創建帳號
         cur.execute(
             "INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
             (email, generate_password_hash(os.urandom(8).hex()), email),
         )
         conn.commit()
-
-        # 重新抓取剛插入的使用者資料
         cur.execute("SELECT id, username FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
-
     session["user_id"] = user[0]
     session["username"] = user[1]
     session["is_admin"] = False
-
     cur.close()
     conn.close()
     return redirect("/?success=registered_google")
@@ -154,27 +137,19 @@ def reset_password():
     if request.method == "POST":
         email = request.form.get("email")
         new_password = request.form.get("new_password")
-
         conn = get_db_connection()
         cur = conn.cursor()
-
-        # 第一次提交，只有 email 沒有新密碼，檢查 email 是否存在
         if email and not new_password:
             cur.execute("SELECT id FROM users WHERE email = %s", (email,))
             user = cur.fetchone()
             cur.close()
             conn.close()
             if user:
-                # 顯示新密碼輸入框，帶入 email (用隱藏欄位) 讓下一次提交有 email
-                return render_template(
-                    "reset_password.html", email=email, step=2
-                )
+                return render_template("reset_password.html", email=email, step=2)
             else:
                 return render_template(
                     "reset_password.html", error="找不到此 Email", step=1
                 )
-
-        # 第二次提交，有 email 和 new_password，直接更新密碼
         elif email and new_password:
             hashed_pw = generate_password_hash(new_password)
             cur.execute(
@@ -184,8 +159,6 @@ def reset_password():
             cur.close()
             conn.close()
             return redirect("/login?success=password_changed")
-
-    # 預設顯示輸入 email 步驟
     return render_template("reset_password.html", step=1)
 
 
@@ -193,11 +166,8 @@ def reset_password():
 def user_profile():
     if "user_id" not in session:
         return redirect("/login")
-
     conn = get_db_connection()
     cur = conn.cursor()
-
-    # 一次查出 user 所有需要欄位
     cur.execute(
         "SELECT username, email, password FROM users WHERE id = %s",
         (session["user_id"],),
@@ -208,20 +178,16 @@ def user_profile():
         conn.close()
         session.clear()
         return redirect("/login")
-
     username, email, hashed_password = user
-
     if request.method == "POST":
         old_password = request.form.get("old_password")
         new_password = request.form.get("new_password")
-
         if not check_password_hash(hashed_password, old_password):
             cur.close()
             conn.close()
             return render_template(
                 "profile.html", username=username, email=email, error="舊密碼錯誤"
             )
-
         new_hashed = generate_password_hash(new_password)
         cur.execute(
             "UPDATE users SET password = %s WHERE id = %s",
@@ -230,10 +196,8 @@ def user_profile():
         conn.commit()
         cur.close()
         conn.close()
-
-        session.clear()  # 密碼更新後登出
+        session.clear()
         return redirect("/login?success=password_changed")
-
     cur.close()
     conn.close()
     return render_template("profile.html", username=username, email=email)
@@ -250,7 +214,6 @@ def admin_panel():
 def messages():
     conn = get_db_connection()
     cur = conn.cursor()
-
     if request.method == "POST":
         if "user_id" not in session:
             return jsonify({"error": "未登入"}), 401
@@ -263,7 +226,6 @@ def messages():
         cur.close()
         conn.close()
         return jsonify({"status": "success"})
-
     elif request.method == "DELETE":
         if not session.get("is_admin"):
             return jsonify({"error": "Unauthorized"}), 401
@@ -273,7 +235,6 @@ def messages():
         cur.close()
         conn.close()
         return jsonify({"status": "deleted"})
-
     else:
         cur.execute(
             """
@@ -294,23 +255,16 @@ def delete_account():
     user_id = session.get("user_id")
     if not user_id:
         return redirect("/login")
-
     password = request.form.get("password")
-
     conn = get_db_connection()
     cur = conn.cursor()
-
-    # 查找使用者密碼
     cur.execute("SELECT password FROM users WHERE id = %s", (user_id,))
     user = cur.fetchone()
-
     if not user or not check_password_hash(user[0], password):
         cur.close()
         conn.close()
         flash("密碼錯誤，無法刪除帳號", "error")
         return redirect("/profile")
-
-    # 刪除使用者帳號
     cur.execute(
         """
         UPDATE users
@@ -325,8 +279,7 @@ def delete_account():
     conn.commit()
     cur.close()
     conn.close()
-
-    session.clear()  # 登出
+    session.clear()
     flash("帳號已成功刪除", "success")
     return redirect("/")
 

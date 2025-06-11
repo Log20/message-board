@@ -23,15 +23,14 @@
     <br />
     <a href="/register">還沒有帳號？註冊</a> <br /><br />
     <a href="/login/google">使用 Google 登入</a>
-
     <script>
         const params = new URLSearchParams(window.location.search);
         if (params.get("success") === "registered") {
             alert("註冊成功，請登入！");
         }
         if (params.get("success") === "registered_google") {
-                alert("Google註冊成功！");
-            }
+            alert("Google註冊成功！");
+        }
         if (params.get("success") === "login") {
             alert("登入成功！");
         }

@@ -9,7 +9,6 @@
 
 <body>
     <h1>留言板</h1>
-
     {% if username %}
     <span>歡迎，{{ username }}！</span>
     <a href="/profile">帳戶設定</a>
@@ -21,18 +20,14 @@
     <a href="{{ url_for('login') }}">登入</a>
     <a href="{{ url_for('register') }}">註冊</a>
     {% endif %}
-
     <hr />
-
     {% if username %}
     <form id="msg-form">
         <textarea name="message" required placeholder="請輸入留言..."></textarea>
         <button type="submit">送出</button>
     </form>
     {% endif %}
-
     <div id="messages"></div>
-
     <script>
         async function loadMessages() {
             const res = await fetch("/messages");
@@ -49,7 +44,6 @@
                 container.appendChild(div);
             });
         }
-
         document
             .getElementById("msg-form")
             ?.addEventListener("submit", async (e) => {
@@ -65,10 +59,8 @@
                     loadMessages();
                 }
             });
-
         loadMessages();
         setInterval(loadMessages, 3000);
-
         const params = new URLSearchParams(window.location.search);
         if (params.get("success") === "registered_google") {
             alert("Google註冊成功！");

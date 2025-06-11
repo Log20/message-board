@@ -31,7 +31,6 @@
                 container.appendChild(div);
             });
         }
-
         async function deleteMessage(id) {
             confirmDelete = confirm("確定要刪除此留言嗎？");
             if (confirmDelete) {
@@ -43,7 +42,6 @@
                 if (res.ok) loadMessages();
             }
         }
-
         loadMessages();
     </script>
 </body>
