@@ -1,32 +1,56 @@
 body {
-  background-color: #000;
-  color: rgb(66, 132, 255);
-  font-family: 'Courier New', Courier, monospace;
-  padding: 20px;
+    background-color: #000;
+    color: rgb(66, 132, 255);
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
 }
 
-a, button {
-  background-color: #111;
-  color: rgb(66, 132, 255);
-  border: 1px solid rgb(66, 132, 255);
-  padding: 5px 10px;
-  margin: 5px;
-  text-decoration: none;
+a,
+input,
+button {
+    background-color: #111;
+    color: rgb(66, 132, 255);
+    border: 1px solid rgb(66, 132, 255);
+    padding: 5px 10px;
+    margin: 5px;
+    text-decoration: none;
+}
+
+a:hover,
+button:hover {
+    background-color: rgb(66, 132, 255);
+    color: #000;
+    cursor: pointer;
+    border-color: rgb(66, 132, 255);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 textarea {
-  width: 100%;
-  background-color: #111;
-  color: rgb(66, 132, 255);
-  border: 1px solid rgb(66, 132, 255);
+    width: 100%;
+    background-color: #111;
+    color: rgb(66, 132, 255);
+    border: 1px solid rgb(66, 132, 255);
+}
+
+#msg-form {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#msg-form textarea {
+    flex: 1;
+    resize: vertical;
+    min-height: 40px;
 }
 
 .message {
-  border-bottom: 1px dashed rgb(66, 132, 255);
-  padding: 10px 0;
+    border-bottom: 1px dashed rgb(66, 132, 255);
+    padding: 10px 0;
 }
 
 .timestamp {
-  color: #888;
-  font-size: 0.9em;
+    color: #888;
+    font-size: 0.9em;
 }

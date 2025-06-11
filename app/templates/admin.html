@@ -1,62 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>管理員介面</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8" />
+    <title>管理員介面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
+
 <body>
-  <h1>管理員後台</h1>
-  <p>您好，{{ username }}（管理員）</p>
-  <a href="/"><button>回留言板</button></a>
-  <a href="/logout"><button>登出</button></a>
+    <h1>管理員後台</h1>
+    <h2>您好，{{ username }}</h2>
+    <a href="/">回留言板</a>
+    <a href="/logout">登出</a>
+    <hr />
+    <div id="messages"></div>
+    <script>
+        async function loadMessages() {
+            const res = await fetch("/messages");
+            const data = await res.json();
+            const container = document.getElementById("messages");
+            container.innerHTML = "";
+            data.forEach(([id, user, message, created_at]) => {
+                const div = document.createElement("div");
+                div.className = "message";
+                div.innerHTML = `
+            <strong>${user || "匿名"}:</strong> ${message}<br>
+            <span class="timestamp">${created_at}</span><br>
+            <button onclick="deleteMessage(${id})">刪除</button>
+          `;
+                container.appendChild(div);
+            });
+        }
 
-  <h2>帳號管理</h2>
-  <form method="POST" action="/admin/change_password">
-    <label>變更密碼（輸入帳號）：</label><br>
-    <input type="text" name="username" required><br>
-    <label>新密碼：</label><br>
-    <input type="text" name="new_password" required><br>
-    <button type="submit">變更密碼</button>
-  </form>
-  <br>
-  <form method="POST" action="/admin/delete_user" onsubmit="return confirm('確定要刪除該帳號？');">
-    <label>刪除帳號：</label><br>
-    <input type="text" name="username" required><br>
-    <button type="submit">刪除帳號</button>
-  </form>
+        async function deleteMessage(id) {
+            confirmDelete = confirm("確定要刪除此留言嗎？");
+            if (confirmDelete) {
+                const res = await fetch("/messages", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id }),
+                });
+                if (res.ok) loadMessages();
+            }
+        }
 
-  <hr>
-  <div id="messages"></div>
-
-  <script>
-    async function loadMessages() {
-      const res = await fetch('/messages');
-      const data = await res.json();
-      const container = document.getElementById('messages');
-      container.innerHTML = '';
-      data.forEach(([id, user, message, created_at]) => {
-        const div = document.createElement('div');
-        div.className = 'message';
-        div.innerHTML = `
-          <strong>${user || '匿名'}:</strong> ${message}<br>
-          <span class="timestamp">${created_at}</span><br>
-          <button onclick="deleteMessage(${id})">刪除</button>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    async function deleteMessage(id) {
-      const res = await fetch('/messages', {
-        method: 'DELETE',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ id })
-      });
-      if (res.ok) loadMessages();
-    }
-
-    loadMessages();
-  </script>
+        loadMessages();
+    </script>
 </body>
+
 </html>
