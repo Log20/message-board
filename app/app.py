@@ -1,4 +1,6 @@
-import os, psycopg2, secrets, init_db
+import os, psycopg2, secrets
+import subprocess
+subprocess.run(["python", "init_db.py"])
 from flask import (
     Flask,
     render_template,
