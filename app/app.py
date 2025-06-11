@@ -99,7 +99,7 @@ def login():
 def login_google():
     nonce = secrets.token_urlsafe(16)
     session["nonce"] = nonce
-    redirect_uri = url_for("authorize_google", _external=True)
+    redirect_uri = url_for("authorize_google", _scheme='https', _external=True)
     return google.authorize_redirect(redirect_uri, nonce=nonce)
 
 
