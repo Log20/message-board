@@ -11,9 +11,6 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from authlib.integrations.flask_client import OAuth
-import subprocess
-
-subprocess.call(["python", "app/init_db.py"])
 
 app = Flask(__name__)
 oauth = OAuth(app)
@@ -99,7 +96,7 @@ def login():
 def login_google():
     nonce = secrets.token_urlsafe(16)
     session["nonce"] = nonce
-    redirect_uri = url_for("authorize_google", _scheme='https', _external=True)
+    redirect_uri = url_for("authorize_google", _scheme="https", _external=True)
     return google.authorize_redirect(redirect_uri, nonce=nonce)
 
 
