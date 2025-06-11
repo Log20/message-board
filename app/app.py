@@ -1,6 +1,4 @@
 import os, psycopg2, secrets
-import subprocess
-subprocess.run(["python", "init_db.py"])
 from flask import (
     Flask,
     render_template,
@@ -13,6 +11,9 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from authlib.integrations.flask_client import OAuth
+import subprocess
+
+subprocess.call(["python", "app/init_db.py"])
 
 app = Flask(__name__)
 oauth = OAuth(app)
